@@ -1,0 +1,40 @@
+
+# GitLab CI/CD — Docker Build Pipeline
+# Portfolio example — lab validation pending
+
+stages:
+  - validate
+  - build
+
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: "1"
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  IMAGE_NAME: "infrastructure-automation-demo"
+
+validate:
+  stage: validate
+  image: alpine:3.20
+  script:
+    - echo "Checking required project files..."
+    - test -f docker/Dockerfile
+    - test -f docker/index.html
+    - test -f docker/compose.yaml
+    - echo "Required files found."
+
+docker-build:
+  stage: build
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+      alias: docker
+  script:
+    - docker info
+    - docker build
+      -f docker/Dockerfile
+      -t "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" .
+    - docker image inspect "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+    - echo "Docker image built successfully."
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
