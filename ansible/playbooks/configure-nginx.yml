@@ -1,0 +1,57 @@
+
+---
+- name: Configure Nginx lab web server
+  hosts: webservers
+  become: true
+
+  vars:
+    web_root: /var/www/html
+    page_title: Infrastructure Automation Lab
+
+  tasks:
+    - name: Ensure Nginx is installed
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Ensure web directory exists
+      ansible.builtin.file:
+        path: "{{ web_root }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy lab homepage
+      ansible.builtin.copy:
+        dest: "{{ web_root }}/index.html"
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>{{ page_title }}</title>
+          </head>
+          <body>
+            <h1>{{ page_title }}</h1>
+            <p>Deployed using Ansible.</p>
+          </body>
+          </html>
+      notify: Reload Nginx
+
+    - name: Ensure Nginx is running
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
