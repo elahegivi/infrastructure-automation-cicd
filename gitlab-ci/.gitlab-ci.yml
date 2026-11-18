@@ -1,0 +1,43 @@
+
+# GitLab CI/CD Pipeline Example
+# Portfolio demonstration — lab validation pending
+
+stages:
+  - validate
+  - build
+  - deploy
+
+variables:
+  APP_NAME: "infrastructure-demo"
+
+validate:
+  stage: validate
+  image: alpine:3.20
+  script:
+    - echo "Validating project structure..."
+    - test -f README.md
+    - echo "Validation completed."
+
+build:
+  stage: build
+  image: alpine:3.20
+  script:
+    - echo "Building ${APP_NAME}..."
+    - mkdir -p dist
+    - echo "Demo build artifact" > dist/build.txt
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+
+deploy:
+  stage: deploy
+  image: alpine:3.20
+  dependencies:
+    - build
+  script:
+    - echo "Simulating deployment of ${APP_NAME}..."
+    - cat dist/build.txt
+    - echo "Deployment simulation completed."
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
