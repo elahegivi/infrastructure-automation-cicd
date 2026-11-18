@@ -1,0 +1,50 @@
+
+# GitLab CI/CD - Docker Build & Nexus Registry
+# Portfolio example - isolated lab validation pending
+
+stages:
+  - validate
+  - build
+  - publish
+
+variables:
+  DOCKER_HOST: "tcp://docker:2376"
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: "1"
+  DOCKER_CERT_PATH: "/certs/client"
+  IMAGE_NAME: "infrastructure-demo"
+
+default:
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+      alias: docker
+
+validate:
+  stage: validate
+  script:
+    - test -f docker/Dockerfile
+    - test -f docker/index.html
+    - docker info
+
+build:
+  stage: build
+  script:
+    - docker build -f docker/Dockerfile -t "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" .
+    - docker image inspect "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+
+publish-to-nexus:
+  stage: publish
+  script:
+    - test -n "$NEXUS_REGISTRY"
+    - test -n "$NEXUS_USERNAME"
+    - test -n "$NEXUS_PASSWORD"
+    - echo "$NEXUS_PASSWORD" | docker login "$NEXUS_REGISTRY" --username "$NEXUS_USERNAME" --password-stdin
+    - docker build -f docker/Dockerfile -t "${NEXUS_REGISTRY}/${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" .
+    - docker push "${NEXUS_REGISTRY}/${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+    - docker logout "$NEXUS_REGISTRY"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
