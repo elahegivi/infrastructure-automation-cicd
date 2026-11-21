@@ -5,118 +5,212 @@
 
 ## Overview
 
-This repository showcases infrastructure automation and CI/CD practices based on hands-on experience with enterprise IT systems and DevOps tooling.
+This repository showcases infrastructure automation and CI/CD engineering practices, combining experience with enterprise IT systems, configuration management, containerization, automated delivery workflows, code quality analysis, and artifact management.
 
-It combines Ansible automation, containerized applications, GitLab CI/CD pipelines, code quality analysis, and artifact management.
+The portfolio includes reusable Ansible playbooks, Docker configurations, GitLab CI/CD pipeline examples, and technical architecture documentation.
 
-The project includes technical documentation and reproducible configuration examples. The public examples are currently awaiting validation in an isolated lab environment.
+The primary objective is to demonstrate how infrastructure automation and application delivery components can be organized into a consistent, maintainable workflow.
 
 ## Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| Ansible | Infrastructure automation and configuration |
+| Ansible | Infrastructure automation and configuration management |
 | GitLab CI/CD | Pipeline orchestration |
 | GitLab Runner | Pipeline execution |
 | Docker | Application containerization |
-| Docker Compose | Local container deployment |
-| SonarQube | Static analysis and quality gates |
-| Nexus Repository | Private Docker registry |
+| Docker Compose | Container deployment |
+| SonarQube | Static code analysis and quality gates |
+| Nexus Repository | Private container image registry |
 | Nginx | Demonstration web application |
-| Debian Linux | Target lab environment |
+| Debian Linux | Target infrastructure environment |
 
-## Technical Projects
+## 1. Infrastructure Automation with Ansible
 
-### 1. Infrastructure Automation with Ansible
+The Ansible configuration examples demonstrate repeatable installation and configuration of Debian-based web servers.
 
-The Ansible examples demonstrate repeatable configuration of Debian-based web servers.
+### Project Files
 
 | File | Description |
 |---|---|
 | [Install Nginx](ansible/playbooks/install-nginx.yml) | Install and enable Nginx |
-| [Configure Nginx](ansible/playbooks/configure-nginx.yml) | Deploy a sample page using variables and a handler |
-| [Inventory](ansible/inventory/hosts.ini) | Example target hosts and SSH settings |
+| [Configure Nginx](ansible/playbooks/configure-nginx.yml) | Configure Nginx and deploy a sample page |
+| [Inventory](ansible/inventory/hosts.ini) | Example inventory and SSH settings |
 | [Ansible Configuration](ansible/ansible.cfg) | Controller configuration and privilege escalation |
 
-Key concepts:
+### Engineering Concepts
 
 - Infrastructure configuration automation
-- Reusable playbooks
+- Repeatable deployment procedures
+- Ansible inventories
 - Variables and handlers
-- Idempotent operations
-- SSH-based server management
+- Idempotent configuration management
+- SSH-based Linux administration
 
-### 2. Docker & Container Deployment
+### Example Playbook Execution
 
-A lightweight Nginx web application is provided as a demonstration workload.
+Run from the repository root:
+
+```bash
+cd ansible
+ansible-playbook playbooks/install-nginx.yml
+ansible-playbook playbooks/configure-nginx.yml
+```
+
+Configure the inventory and SSH access for the target environment before execution.
+
+## 2. Docker & Container Deployment
+
+The repository includes a lightweight Nginx web application as a demonstration workload.
+
+### Project Files
 
 | File | Description |
 |---|---|
 | [Dockerfile](docker/Dockerfile) | Nginx-based container image |
-| [Demo Web Application](docker/index.html) | Sample HTML page |
-| [Docker Compose](docker/compose.yaml) | Local deployment with health checks |
+| [Sample Application](docker/index.html) | Demonstration HTML application |
+| [Docker Compose](docker/compose.yaml) | Local container deployment and health checks |
 
-The Compose example publishes the application on localhost port 8080.
+### Container Workflow
 
-Planned lab command, executed from the repository root:
+```mermaid
+flowchart LR
+    A["Application Files"]
+    B["Dockerfile"]
+    C["Docker Image"]
+    D["Docker Container"]
+    E["HTTP Endpoint"]
+
+    A --> B --> C --> D --> E
+```
+
+### Example Deployment
+
+From the repository root:
 
 ```bash
 docker compose -f docker/compose.yaml up -d --build
 ```
 
-Expected local endpoint:
+Application endpoint:
 
 `http://localhost:8080`
 
-This deployment has not yet been validated in the lab.
+### Example Container Management
 
-### 3. GitLab CI/CD Pipelines
+View container status:
 
-The repository contains separate examples for different CI/CD workflows.
+```bash
+docker compose -f docker/compose.yaml ps
+```
+
+View logs:
+
+```bash
+docker compose -f docker/compose.yaml logs
+```
+
+Stop the deployment:
+
+```bash
+docker compose -f docker/compose.yaml down
+```
+
+The deployment demonstrates a basic container lifecycle using Docker Compose.
+
+## 3. GitLab CI/CD Pipelines
+
+The repository provides separate GitLab CI/CD configuration examples for different automation scenarios.
+
+### Pipeline Examples
 
 | Pipeline | Purpose |
 |---|---|
-| [Basic CI/CD](gitlab-ci/.gitlab-ci.yml) | Validate, build artifact, simulate deployment |
-| [Docker Build](gitlab-ci/docker-build.gitlab-ci.yml) | Build and inspect a container image |
-| [Docker + Nexus](gitlab-ci/docker-nexus.gitlab-ci.yml) | Build and publish to a private registry |
+| [Basic CI/CD](gitlab-ci/.gitlab-ci.yml) | Validation, artifact creation, and deployment workflow example |
+| [Docker Build](gitlab-ci/docker-build.gitlab-ci.yml) | Docker image build and inspection |
+| [Docker + Nexus](gitlab-ci/docker-nexus.gitlab-ci.yml) | Container image build and registry publication |
 | [SonarQube](gitlab-ci/sonarqube.gitlab-ci.yml) | Static analysis and quality gate |
-| [Integrated Pipeline](gitlab-ci/integrated-pipeline.gitlab-ci.yml) | Validate, analyze, build, publish |
+| [Integrated Pipeline](gitlab-ci/integrated-pipeline.gitlab-ci.yml) | Validation, analysis, build, and publication |
 
-These are alternative pipeline examples, not five pipelines that execute automatically.
+These files represent alternative CI/CD configurations.
 
-GitLab must be configured to use the selected CI/CD configuration file.
+A GitLab project must be configured to use the selected CI/CD configuration file.
 
-### 4. Integrated CI/CD Workflow
+### CI/CD Engineering Concepts
 
-The integrated example combines validation, SonarQube analysis, Docker image creation, and publication to Nexus.
+- Pipeline stages and jobs
+- GitLab Runner execution
+- Automated validation
+- Docker image creation
+- Static code analysis
+- Quality gates
+- Container registry integration
+- Manual publication approval
+- CI/CD variables and credentials
+
+## 4. Integrated CI/CD Architecture
+
+The integrated pipeline combines project validation, code quality analysis, container image creation, and registry publication.
 
 ```mermaid
 flowchart TD
-    A[Source Repository]
-    B[GitLab CI/CD]
-    C[Validate Project]
-    D[SonarQube Analysis]
-    E{Quality Gate Passed?}
-    F[Docker Image Build]
-    G[Manual Publish Approval]
-    H[Nexus Docker Registry]
-    I[Stop Pipeline]
+    A["Source Repository"]
+    B["GitLab CI/CD"]
+    C["Validate Project"]
+    D["SonarQube Analysis"]
+    E{"Quality Gate Passed?"}
+    F["Docker Image Build"]
+    G["Manual Publish Approval"]
+    H["Nexus Docker Registry"]
+    I["Pipeline Failed"]
 
     A --> B --> C --> D --> E
-    E -->|Yes| F
-    E -->|No| I
+    E -->|"Yes"| F
+    E -->|"No"| I
     F --> G --> H
 ```
 
-The publish stage requires manual approval on the default branch.
+### Pipeline Stages
 
-The current example rebuilds the image during publication. A future improvement will promote an immutable image artifact or digest rather than rebuilding it.
+**Validation**
 
-For technical details, see:
+Checks project files and prepares the workflow for subsequent stages.
+
+**Code Quality**
+
+Uses SonarQube analysis and quality gate evaluation.
+
+**Container Build**
+
+Builds the demonstration application container image.
+
+**Publication**
+
+Provides a manually approved stage for publishing a container image to Nexus Repository.
+
+### Artifact Management
+
+Nexus Repository provides a central location for storing and distributing container images.
+
+Registry integration requires:
+
+- Registry endpoint configuration
+- Authentication credentials
+- Appropriate repository permissions
+- Secure transport
+- Image naming and tagging conventions
+
+### Image Promotion
+
+A stronger CI/CD design promotes an immutable image or digest between pipeline stages rather than rebuilding the container during publication.
+
+This improves traceability and consistency between the built and published artifacts.
+
+For architecture details:
 
 [Infrastructure Automation & CI/CD Architecture](docs/cicd-architecture.md)
 
-## Repository Structure
+## 5. Repository Structure
 
 ```text
 infrastructure-automation-cicd/
@@ -142,62 +236,97 @@ infrastructure-automation-cicd/
 └── README.md
 ```
 
-## Security Considerations
+## 6. Security Considerations
 
-- No production credentials or internal server addresses are included.
-- Inventory IP addresses are documentation-only examples.
-- GitLab secrets must be stored in protected CI/CD variables.
-- Registry communication should use HTTPS.
-- Docker-in-Docker requires careful Runner isolation.
-- All deployment examples require review before production use.
+Infrastructure automation and CI/CD systems require appropriate security controls.
 
-## Project Roadmap
+Key considerations:
 
-### Documentation & Examples — Completed
+- Protect SSH private keys and authentication credentials.
+- Use protected and masked GitLab CI/CD variables.
+- Apply least-privilege permissions to automation accounts.
+- Restrict GitLab Runner access to trusted workloads.
+- Use HTTPS for container registry communication.
+- Protect Nexus credentials and access tokens.
+- Review Docker-in-Docker security implications.
+- Avoid exposing internal infrastructure addresses.
+- Do not commit production secrets or confidential configuration files.
 
-- [x] Create Ansible installation playbook
-- [x] Create Ansible configuration playbook
-- [x] Add sample inventory and controller configuration
-- [x] Create Dockerfile and sample application
-- [x] Add Docker Compose configuration
-- [x] Document basic GitLab CI/CD workflow
-- [x] Add Docker image build pipeline
-- [x] Add Nexus registry integration example
-- [x] Add SonarQube quality gate example
-- [x] Create integrated CI/CD pipeline
-- [x] Document CI/CD architecture
+## 7. Engineering Best Practices
 
-### Planned Improvements
+### Ansible
 
-- [ ] Add Ansible roles and Jinja2 templates
-- [ ] Add pipeline syntax validation
-- [ ] Add container image vulnerability scanning
-- [ ] Improve image promotion using immutable artifacts
-- [ ] Add automated deployment to a test environment
-- [ ] Add execution logs and screenshots
+- Maintain reusable playbooks.
+- Prefer idempotent operations.
+- Use inventory variables for environment-specific configuration.
+- Protect sensitive variables.
+- Review changes before applying them to managed hosts.
 
-### Lab Validation — Pending
+### Docker
 
-- [ ] Prepare Debian test machines
-- [ ] Run and verify Ansible playbooks
-- [ ] Build and run the Docker application
-- [ ] Set up an isolated GitLab Runner
-- [ ] Validate GitLab pipeline syntax and execution
-- [ ] Test SonarQube quality gate integration
-- [ ] Configure Nexus Docker Registry
-- [ ] Push and pull container images
-- [ ] Validate the integrated CI/CD workflow
+- Use minimal base images where appropriate.
+- Maintain explicit image versions.
+- Include meaningful health checks.
+- Avoid storing secrets in container images.
+- Review container resource requirements.
 
-## Implementation Status
+### GitLab CI/CD
 
-The configuration files and documentation are available in this repository.
+- Separate validation, analysis, build, and publication stages.
+- Use appropriate pipeline failure conditions.
+- Protect publishing credentials.
+- Apply manual approval to sensitive operations.
+- Preserve artifact traceability.
+- Keep deployment permissions restricted.
 
-They demonstrate the intended automation and delivery workflow, but successful end-to-end execution has not yet been demonstrated in the public lab.
+### SonarQube
 
-Future updates will include validated configuration files, execution evidence, and troubleshooting notes.
+- Define relevant quality gate conditions.
+- Use automated analysis in CI workflows.
+- Review code quality findings before publication.
+
+### Nexus Repository
+
+- Use authenticated registry access.
+- Maintain clear repository permissions.
+- Apply appropriate image retention policies.
+- Use consistent versioning and tagging conventions.
+
+## 8. Technical Development Areas
+
+The architecture supports further development in:
+
+- Ansible roles and Jinja2 templates
+- Pipeline syntax checking
+- Automated container vulnerability scanning
+- Immutable artifact promotion
+- Environment-specific deployment workflows
+- Pipeline reporting and execution evidence
+- Improved configuration reuse
+- CI/CD security controls
+
+## 9. Professional Focus
+
+This repository highlights technical knowledge and engineering practices relevant to:
+
+- IT Infrastructure Engineering
+- Systems Administration
+- Infrastructure Automation
+- Configuration Management
+- CI/CD Operations
+- Containerization
+- DevOps Tooling
+
+The project connects enterprise infrastructure experience with repeatable automation and application delivery workflows.
+
+## 10. References
+
+- [Ansible Documentation](https://docs.ansible.com/)
+- [GitLab CI/CD Documentation](https://docs.gitlab.com/ci/)
+- [Docker Documentation](https://docs.docker.com/)
+- [SonarQube Documentation](https://docs.sonarsource.com/)
+- [Sonatype Nexus Repository Documentation](https://help.sonatype.com/)
 
 ## About
 
-This portfolio highlights experience and ongoing development in IT Infrastructure Engineering, configuration automation, CI/CD operations, containerization, and DevOps tooling.
-
-The goal is to build a documented, reproducible infrastructure automation environment that connects practical operations experience with automated delivery workflows.
+A technical portfolio focused on infrastructure automation, GitLab CI/CD, Docker, Ansible, SonarQube, Nexus Repository, and repeatable operational workflows.
