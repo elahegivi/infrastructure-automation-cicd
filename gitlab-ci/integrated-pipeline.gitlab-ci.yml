@@ -1,7 +1,7 @@
 
 # Integrated GitLab CI/CD Pipeline
 # SonarQube -> Docker Build -> Nexus Registry
-# Portfolio example - lab validation pending
+# Project validation, code analysis, container build, and controlled publication
 
 stages:
   - validate
