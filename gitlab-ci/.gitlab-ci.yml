@@ -1,6 +1,6 @@
 
-# GitLab CI/CD Pipeline Example
-# Portfolio demonstration — lab validation pending
+# GitLab CI/CD — Basic Pipeline
+# Project validation, artifact creation, and deployment workflow example
 
 stages:
   - validate
