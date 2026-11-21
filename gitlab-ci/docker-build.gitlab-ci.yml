@@ -1,6 +1,6 @@
 
 # GitLab CI/CD — Docker Build Pipeline
-# Portfolio example — lab validation pending
+# Project validation and versioned Docker image creation
 
 stages:
   - validate
