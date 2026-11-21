@@ -1,6 +1,6 @@
 
-# GitLab CI/CD - SonarQube Static Analysis
-# Portfolio example - lab validation pending
+# GitLab CI/CD — SonarQube Static Analysis
+# Automated source analysis and Quality Gate evaluation
 
 stages:
   - validate
