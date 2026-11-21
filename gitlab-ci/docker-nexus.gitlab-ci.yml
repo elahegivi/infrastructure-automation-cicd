@@ -1,6 +1,6 @@
 
-# GitLab CI/CD - Docker Build & Nexus Registry
-# Portfolio example - isolated lab validation pending
+# GitLab CI/CD — Docker Build & Nexus Registry
+# Container image build and controlled publication workflow
 
 stages:
   - validate
